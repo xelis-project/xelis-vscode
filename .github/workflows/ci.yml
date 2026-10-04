@@ -47,13 +47,38 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Download VSIX artifact
         uses: actions/download-artifact@v4
         with:
           name: xelis-vscode-vsix
 
+      - name: Build release notes from git log
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          prev="$(git describe --tags --abbrev=0 "${tag}^" 2>/dev/null || true)"
+          if [ -n "${prev}" ]; then
+            header="Changes since ${prev}"
+            range="${prev}..${tag}"
+          else
+            header="Initial release"
+            range="${tag}"
+          fi
+          {
+            echo "## ${header}"
+            echo
+            git log --no-merges --pretty=format:"- %s (%h)" "${range}"
+            echo
+            echo
+            echo "**Full Changelog**: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/compare/${prev:-$(git rev-list --max-parents=0 "${tag}" | tail -n 1)}...${tag}"
+          } > release_notes.md
+          cat release_notes.md
+
       - name: Attach VSIX to GitHub release
         uses: softprops/action-gh-release@v2
         with:
           files: xelis-vscode.vsix
-          generate_release_notes: true
+          body_path: release_notes.md
