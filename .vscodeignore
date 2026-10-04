@@ -1,4 +1,14 @@
 .vscode/**
 .vscode-test/**
+.kilo/**
+.github/**
+.git/**
 .gitignore
+.gitattributes
+src/**
+test/**
+tsconfig.json
+package-lock.json
 vsc-extension-quickstart.md
+**/*.map
+**/*.ts

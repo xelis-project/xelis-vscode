@@ -1,8 +1,15 @@
 {
-  "name": "xvm",
-  "displayName": "XELIX VM",
-  "description": "Syntax highlighting for XELIS VM",
+  "name": "xelis-vscode",
+  "displayName": "XELIS VM (Silex)",
+  "description": "Silex language support for the XELIS VM (XVM): syntax highlighting and IntelliSense",
   "version": "0.0.1",
+  "publisher": "xelis",
+  "license": "BSD-3-Clause",
+  "icon": "icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xelis-project/xelis-vscode.git"
+  },
   "engines": {
     "vscode": "^1.91.0"
   },
@@ -15,12 +22,19 @@
       {
         "id": "xvm",
         "aliases": [
-          "xvm"
+          "Silex",
+          "silex",
+          "xvm",
+          "slx"
         ],
         "extensions": [
-          ".xel"
+          ".slx"
         ],
-        "configuration": "./language-configuration.json"
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./icons/xvm.svg",
+          "dark": "./icons/xvm.svg"
+        }
       }
     ],
     "grammars": [
@@ -34,10 +48,14 @@
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
-    "watch": "tsc -p -watch ./"
+    "watch": "tsc -p -watch ./",
+    "pretest": "npm run compile",
+    "test": "node --test test/grammar.test.cjs test/language.test.cjs"
   },
   "devDependencies": {
     "@types/vscode": "^1.91.0",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "vscode-oniguruma": "^2.0.1",
+    "vscode-textmate": "^9.2.0"
   }
 }
